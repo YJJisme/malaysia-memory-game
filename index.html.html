@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>馬來西亞回憶小遊戲</title>
+  <style>
+    body {
+      font-family: "微軟正黑體", sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+      position: relative;
+      z-index: 0;
+    }
+    .game-container {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      padding: 20px;
+      display: inline-block;
+      max-width: 900px;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.75);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    
+    #alphabet {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .multi-choice {
+      min-width: 80px;
+      height: 60px;
+      margin: 5px;
+      font-size: 0.9em;
+      background-color: #fff;
+      border: 2px solid #ffd666;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+    }
+    .multi-choice:hover {
+      background-color: #ffe58f;
+      border-color: #ffa940;
+    }
+    .multi-choice.selected {
+      background-color: #ff7875;
+      border-color: #ff4d4f;
+      color: white;
+    }
+    button {
+      background-color: #91d5ff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin: 20px 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #69c0ff;
+    }
+    #musicControl {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+    }
+    .envelope {
+      background: #fffbe6;
+      border: 2px solid #ffd666;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: left;
+      animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    #letterModal {
+      background-color: #fffef0;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 700px;
+      width: 90%;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      animation: slideUp 0.6s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(80px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .bg-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 1s ease-in-out;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-container">
+    <img id="bgImage" src="images/bg1.jpg" alt="背景圖">
+  </div>
+  <audio id="bgm" src="music1.mp3" loop></audio>
+  <button id="musicControl" onclick="toggleMusic()">🔈 音樂</button>
+  <div class="game-container">
+  <h1>🎓 馬來西亞回憶小遊戲 ✧</h1>
+  
+<div id="progressContainer" style="width: 100%; max-width: 900px; margin: 20px auto;">
+  <div id="progressBar" style="height: 20px; background: #ffe58f; border-radius: 10px; overflow: hidden;">
+    <div id="progressFill" style="height: 100%; width: 0%; background: #fa541c; transition: width 0.5s;"></div>
+  </div>
+</div>
+
+<div id="story"></div>
+  <div id="alphabet"></div>
+  <div>
+    <button onclick="submitMulti()">提交答案</button>
+    <button onclick="resetMulti()">重新選擇</button>
+  </div>
+  </div>
+  <div id="letterContainer" style="display: none;"></div>
+  <div id="overlay">
+    <div id="letterModal">
+      <div class="envelope">
+        <h3 style="color:#d46b08;">💌 給學長姐的一封信</h3>
+        <p>親愛的學長姐們：</p>
+        <p>真的很感謝你們，不管是在馬來西亞、在東港，還是我生日的時候，你們都很照顧我，讓我感受到人心的溫暖、也留下珍貴的回憶。</p>
+        <pre style="font-family: inherit; white-space: pre-wrap;">
+祝你們在未來的路上都能<strong>馬</strong>到成功，
+                不畏困難好機會<strong>來</strong>者不拒，
+                忙碌之餘常有閒<strong>西</strong>窗剪燭，
+最後祝不管春分夏至秋分<strong>亞</strong>歲四季都好！
+        </pre>
+        <p style="text-align: right; margin-top: 30px;">學弟 楊竣傑 敬上</p>
+        <div style="text-align: center;"><button onclick="closeLetter()">關閉信件</button></div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    const questions = [
+      {
+        type: 'normal',
+        options: ["A. 飛機", "B. Uber", "C. 腳踏車", "D. 火車"],
+        correct: ["B"],
+        question: "在馬來西亞，我們最常搭乘的交通工具是？"
+      },
+      {
+        type: 'normal',
+        options: [
+          "A. 《中論觀燃可燃品第十（十六偈）》", "B. 馬來西亞的傳統服飾設計",
+          "C. 亞洲美食文化導論", "D. 馬來語日常會話入門", "E. 國際中文教師實務",
+          "F. 東南亞現代藝術導論", "G. 宗教與多元社會", "H. 海外華人經濟史",
+          "I. 新馬文學與現代性", "J. 世界華文媒體概論", "K. 華人傳統節慶",
+          "L. 婚姻與宗教文化", "M. 南洋歷史踏查與寫作", "N. 馬華戲劇創作工作坊",
+          "O. 東南亞電影賞析", "P. 海外中文報刊分析", "Q. 馬來語文法結構",
+          "R. 客家語與社群", "S. 多語社會的語言使用", "T. 新村文化研究",
+          "U. 華語課堂實習經驗", "V. 馬來西亞小說閱讀", "W. 印尼語初級會話",
+          "X. 南洋腳本研究導論", "Y. 《馬華文學、馬來文學以及華馬比較的研究概況》",
+          "Z. 科技與社會"
+        ],
+        correct: ["A", "Y"],
+        question: "我們上過哪些課？（可複選）"
+      },
+      {
+        type: 'normal',
+        options: [
+          "A. 椰林小徑", "B. 古巷弄", "C. 宜康省超市", "D. 檳榔園", "E. 雲霧山丘",
+          "F. 湖畔公園", "G. 島嶼沙灘", "H. 市中心廣場", "I. 花園步道", "J. 溪流岸邊",
+          "K. 文化展覽館", "L. 傳統手作坊", "M. 古鎮老街", "N. 菠蘿田", "O. 骰子巷",
+          "P. 雞場街", "Q. 燈籠巷", "R. 霹靂洞", "S. 午夜小酒館", "T. 竹林步道",
+          "U. 環島步道", "V. 山頂瞭望台", "W. 遺跡考古區", "X. 古堡探險", "Y. 金寶古廟",
+          "Z. 熱帶雨林"
+        ],
+        correct: ["C", "R", "Y"],
+        question: "我們去過哪些地方呢？（可複選）"
+      },
+      {
+        type: 'single',
+        options: ["樂", "喜", "哀", "怒"],
+        correct: ["樂"],
+        question: "這趟馬來西亞的心情，用一個字形容？"
+      }
+    ];
+
+    const hintMessages = [
+      "仔細想想，那段回憶是怎樣的呢？",
+      "可能再回味一下我們的馬來之旅喔～",
+      "答案就在你心中最深刻的那個片段！",
+      "回想一下肉骨茶、霹靂洞、搭Uber……",
+      "一定可以的，再試試！"
+    ];
+
+    let currentQuestion = 0;
+    let selectedLetters = [];
+    let finalResult = [];
+
+    
+      function updateProgress() {
+        const progress = ((currentQuestion) / questions.length) * 100;
+        document.getElementById("progressFill").style.width = progress + "%";
+      }
+
+    function generateButtons(hintText = null) {
+      const alphabetContainer = document.getElementById('alphabet');
+      alphabetContainer.innerHTML = '';
+      const current = questions[currentQuestion];
+
+      current.options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'multi-choice';
+        btn.innerText = opt;
+        btn.onclick = () => selectLetter(btn, opt);
+        alphabetContainer.appendChild(btn);
+      });
+
+      document.getElementById('story').innerHTML = hintText
+        ? `<span style="color: #fa541c;">${hintText}</span><br><br>第 <span id="questionNumber">${currentQuestion + 1}</span> 題：${current.question}`
+        : `第 <span id="questionNumber">${currentQuestion + 1}</span> 題：${current.question}<br><small style="color: gray;">（請點右上角🔈播放音樂）</small>`;
+    }
+
+    function selectLetter(button, optionText) {
+      const letter = optionText.split('.')[0].trim().toUpperCase();
+      const isSingle = questions[currentQuestion].type === 'single';
+
+      if (isSingle) {
+        selectedLetters = [letter];
+        document.querySelectorAll('.multi-choice').forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+      } else {
+        if (button.classList.contains('selected')) {
+          button.classList.remove('selected');
+          selectedLetters = selectedLetters.filter(l => l !== letter);
+        } else {
+          button.classList.add('selected');
+          selectedLetters.push(letter);
+        }
+      }
+    }
+
+    function submitMulti() {
+      const current = questions[currentQuestion];
+      const correct = current.correct.map(c => c.toUpperCase());
+      const sel = selectedLetters.map(l => l.toUpperCase());
+      const isCorrect = correct.every(c => sel.includes(c)) && sel.length === correct.length;
+
+      if (currentQuestion === 3 && current.type === 'single') {
+        const response = sel[0];
+        if (response === '喜') {
+          generateButtons("還有呢？");
+          return;
+        } else if (response === '怒') {
+          generateButtons("我感到很抱歉！");
+          return;
+        } else if (response === '哀') {
+          generateButtons("怎麼會？發生甚麼事了？");
+          return;
+        }
+      }
+
+      if (isCorrect) {
+        if (currentQuestion === 0) finalResult.push("B");
+        else if (currentQuestion === 1) finalResult.push("YA");
+        else if (currentQuestion === 2) finalResult.push("CRY");
+        else if (currentQuestion === 3) finalResult.push("樂");
+
+        currentQuestion++;
+        selectedLetters = [];
+
+        if (currentQuestion < questions.length) {
+          let currentBgIndex = 1;
+const totalBgs = 8;
+
+function rotateBackground() {
+  document.getElementById('bgImage').src = `images/bg${currentBgIndex}.jpg`;
+  currentBgIndex = (currentBgIndex % totalBgs) + 1;
+}
+
+rotateBackground();
+setInterval(rotateBackground, 5000);
+
+generateButtons();
+      updateProgress();
+        } else {
+          document.getElementById('story').innerHTML = `
+            🎉 恭喜完成回憶挑戰！<br><br>
+            你最後選擇：<strong>${finalResult.join('、')}</strong><br><br>
+            也就是：<strong style="font-size:2em;">畢業快樂</strong> 🎓<br><br>
+            <button onclick="showLetter()">💌 點我展開信件</button>
+            <br><br>
+            <button onclick="restart()">重新挑戰</button>
+          `;
+          document.getElementById('alphabet').innerHTML = '';
+          updateProgress();
+          document.querySelectorAll("button").forEach(btn => {
+            if (btn.innerText.includes("提交") || btn.innerText.includes("重新選擇")) {
+              btn.style.display = "none";
+            }
+          });
+        }
+      } else {
+        const randomHint = hintMessages[Math.floor(Math.random() * hintMessages.length)];
+        generateButtons(randomHint);
+        selectedLetters = [];
+      }
+    }
+
+    function resetMulti() {
+      selectedLetters = [];
+      let currentBgIndex = 1;
+const totalBgs = 8;
+
+function rotateBackground() {
+  document.getElementById('bgImage').src = `images/bg${currentBgIndex}.jpg`;
+  currentBgIndex = (currentBgIndex % totalBgs) + 1;
+}
+
+rotateBackground();
+setInterval(rotateBackground, 5000);
+
+generateButtons();
+      updateProgress();
+    }
+
+    function restart() {
+      currentQuestion = 0;
+      selectedLetters = [];
+      finalResult = [];
+      document.querySelectorAll("button").forEach(btn => btn.style.display = "inline-block");
+      document.getElementById("letterContainer").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+      let currentBgIndex = 1;
+const totalBgs = 8;
+
+function rotateBackground() {
+  document.getElementById('bgImage').src = `images/bg${currentBgIndex}.jpg`;
+  currentBgIndex = (currentBgIndex % totalBgs) + 1;
+}
+
+rotateBackground();
+setInterval(rotateBackground, 5000);
+
+generateButtons();
+      updateProgress();
+    }
+
+    function toggleMusic() {
+      const bgm = document.getElementById('bgm');
+      if (bgm.paused) {
+        bgm.play().then(() => {
+          document.getElementById('musicControl').innerText = '🔊 音樂';
+        }).catch(e => {
+          alert("音樂播放失敗，請再試一次。");
+        });
+      } else {
+        bgm.pause();
+        document.getElementById('musicControl').innerText = '🔈 音樂';
+      }
+    }
+
+    function showLetter() {
+      document.getElementById("overlay").style.display = "flex";
+    }
+
+    function closeLetter() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toUpperCase();
+      if (key >= 'A' && key <= 'Z') {
+        const buttons = document.querySelectorAll('.multi-choice');
+        buttons.forEach(btn => {
+          const letter = btn.innerText.split('.')[0].trim().toUpperCase();
+          if (letter === key) {
+            btn.click();
+          }
+        });
+      }
+      if (e.key === 'Enter') {
+        submitMulti();
+      }
+    });
+
+    let currentBgIndex = 1;
+const totalBgs = 8;
+
+function rotateBackground() {
+  document.getElementById('bgImage').src = `images/bg${currentBgIndex}.jpg`;
+  currentBgIndex = (currentBgIndex % totalBgs) + 1;
+}
+
+rotateBackground();
+setInterval(rotateBackground, 5000);
+
+generateButtons();
+      updateProgress();
+  
+</script>
+</body>
+</html>
