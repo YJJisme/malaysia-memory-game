@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
+
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>馬來西亞回憶小遊戲</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>馬來西亞回憶小遊戲</title>
+<style>
     body {
       font-family: "微軟正黑體", sans-serif;
       text-align: center;
@@ -143,48 +144,46 @@
       opacity: 1;
     }
   </style>
-</head>
+<meta content="馬來西亞回憶小遊戲" property="og:title"/><meta content="馬來西亞回憶小遊戲" property="og:description"/><meta content="website" property="og:type"/><meta content="https://你的網址/" property="og:url"/></head>
 <body>
-  <div class="bg-container">
-    <img id="bgImage" src="images/bg1.jpg" alt="背景圖">
-  </div>
-  <audio id="bgm" src="music1.mp3" loop></audio>
-  <button id="musicControl" onclick="toggleMusic()">🔈 音樂</button>
-  <div class="game-container">
-  <h1>🎓 馬來西亞回憶小遊戲 ✧</h1>
-  
-<div id="progressContainer" style="width: 100%; max-width: 900px; margin: 20px auto;">
-  <div id="progressBar" style="height: 20px; background: #ffe58f; border-radius: 10px; overflow: hidden;">
-    <div id="progressFill" style="height: 100%; width: 0%; background: #fa541c; transition: width 0.5s;"></div>
-  </div>
+<div class="bg-container">
+<img alt="背景圖" id="bgImage" src="images/bg1.jpg"/>
 </div>
-
+<audio id="bgm" loop="" src="music1.mp3"></audio>
+<button id="musicControl" onclick="toggleMusic()">🔈 音樂</button>
+<div class="game-container">
+<h1>🎓 馬來西亞回憶小遊戲 ✧</h1>
+<div id="progressContainer" style="width: 100%; max-width: 900px; margin: 20px auto;">
+<div id="progressBar" style="height: 20px; background: #ffe58f; border-radius: 10px; overflow: hidden;">
+<div id="progressFill" style="height: 100%; width: 0%; background: #fa541c; transition: width 0.5s;"></div>
+</div>
+</div>
 <div id="story"></div>
-  <div id="alphabet"></div>
-  <div>
-    <button onclick="submitMulti()">提交答案</button>
-    <button onclick="resetMulti()">重新選擇</button>
-  </div>
-  </div>
-  <div id="letterContainer" style="display: none;"></div>
-  <div id="overlay">
-    <div id="letterModal">
-      <div class="envelope">
-        <h3 style="color:#d46b08;">💌 給學長姐的一封信</h3>
-        <p>親愛的學長姐們：</p>
-        <p>真的很感謝你們，不管是在馬來西亞、在東港，還是我生日的時候，你們都很照顧我，讓我感受到人心的溫暖、也留下珍貴的回憶。</p>
-        <pre style="font-family: inherit; white-space: pre-wrap;">
+<div id="alphabet"></div>
+<div>
+<button onclick="submitMulti()">提交答案</button>
+<button onclick="resetMulti()">重新選擇</button>
+</div>
+</div>
+<div id="letterContainer" style="display: none;"></div>
+<div id="overlay">
+<div id="letterModal">
+<div class="envelope">
+<h3 style="color:#d46b08;">💌 給學長姐的一封信</h3>
+<p>親愛的學長姐們：</p>
+<p>真的很感謝你們，不管是在馬來西亞、在東港，還是我生日的時候，你們都很照顧我，讓我感受到人心的溫暖、也留下珍貴的回憶。</p>
+<pre style="font-family: inherit; white-space: pre-wrap;">
 祝你們在未來的路上都能<strong>馬</strong>到成功，
                 不畏困難好機會<strong>來</strong>者不拒，
                 忙碌之餘常有閒<strong>西</strong>窗剪燭，
 最後祝不管春分夏至秋分<strong>亞</strong>歲四季都好！
         </pre>
-        <p style="text-align: right; margin-top: 30px;">學弟 楊竣傑 敬上</p>
-        <div style="text-align: center;"><button onclick="closeLetter()">關閉信件</button></div>
-      </div>
-    </div>
-  </div>
-  <script>
+<p style="text-align: right; margin-top: 30px;">學弟 楊竣傑 敬上</p>
+<div style="text-align: center;"><button onclick="closeLetter()">關閉信件</button></div>
+</div>
+</div>
+</div>
+<script>
 
     const questions = [
       {
